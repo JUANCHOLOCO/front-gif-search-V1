@@ -1,35 +1,25 @@
-import { useEffect, useState } from 'react';
-import {getGifs} from '../helpers/getGifs';
+
 import { GifGridItem } from './GifGridItem';
+import { useFetchGifs } from '../hooks/useFetchGifs';
 
 
 interface Props{
  category:string
 }
 
-interface Api{
-  id:string,
-  title:string,
-  url:string
-}
 
 export const GifGrid = ({ category}:Props) => {
 
-  const [images, setImages] = useState<Api[]>([]);
-
-  const getImages = async() => {
-    const newImages = await getGifs(category);
-    setImages(newImages);
-  }
-
-  useEffect(() => {
-    getImages();
-  }, [])
+  const {images, isLoading} = useFetchGifs(category);
   
     
   return (
     <>
         <h3>{category}</h3>
+        {
+          isLoading && (<h2 >Cargando...</h2>)
+        }
+        
         <div className='card-grid'>
           {
             images.map(
